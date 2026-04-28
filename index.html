@@ -136,7 +136,7 @@
         <span class="shift-icon">🌤️</span>
         <span class="shift-label">Afternoon Shift</span>
         <span class="shift-count" id="count-pm">— spots left</span>
-        <span class="shift-time">1:30 PM – 5:00 PM</span>
+        <span class="shift-time">1:30 PM – 4:30 PM</span>
       </div>
       <div class="slot-grid" id="grid-pm"></div>
     </div>
@@ -329,7 +329,7 @@ function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace
 
 function openModal(shift, num, key) {
   pendingSlot = { shift, num, key };
-  const shiftLabel = shift === 'am' ? '10:30 AM – 1:30 PM' : '1:30 PM – 5:00 PM';
+  const shiftLabel = shift === 'am' ? '10:30 AM – 1:30 PM' : '1:30 PM – 4:30 PM';
   document.getElementById('modalTitle').textContent = `Sign up for Spot ${num}`;
   document.getElementById('modalDesc').textContent = `${shift === 'am' ? '☀️ Morning' : '🌤️ Afternoon'} Shift · ${shiftLabel}`;
   document.getElementById('nameInput').value = '';
