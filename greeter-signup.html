@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Greeter Sign-Up – May 9</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fraunces:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Nunito',sans-serif;background:#FFF8F0;min-height:100vh;color:#2C2C2A}
+  .hero{background:linear-gradient(135deg,#FF6B35 0%,#FF9A4D 50%,#FFD166 100%);padding:2rem 1rem 3rem;text-align:center;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+  .logo{width:90px;height:90px;object-fit:contain;border-radius:50%;background:white;padding:8px;margin-bottom:1rem;box-shadow:0 4px 20px rgba(0,0,0,0.15);position:relative;z-index:1}
+  .hero-title{font-family:'Fraunces',serif;font-size:clamp(2rem,6vw,3.2rem);color:white;line-height:1.1;margin-bottom:.5rem;text-shadow:0 2px 8px rgba(0,0,0,0.15);position:relative;z-index:1}
+  .hero-sub{font-size:1rem;color:rgba(255,255,255,0.92);font-weight:600;letter-spacing:.03em;margin-bottom:.3rem;position:relative;z-index:1}
+  .hero-addr{font-size:.85rem;color:rgba(255,255,255,0.8);font-weight:400;position:relative;z-index:1}
+  .emoji-row{font-size:1.8rem;margin-bottom:.75rem;letter-spacing:.2em;position:relative;z-index:1}
+  .container{max-width:720px;margin:0 auto;padding:2rem 1rem}
+  .vibe-banner{background:white;border:2px solid #FFD166;border-radius:16px;padding:1rem 1.25rem;margin-bottom:2rem;display:flex;align-items:center;gap:.75rem;box-shadow:0 2px 12px rgba(255,107,53,0.1)}
+  .vibe-icon{font-size:1.6rem;flex-shrink:0}
+  .vibe-text{font-size:.9rem;color:#444;line-height:1.5}
+  .vibe-text strong{color:#FF6B35}
+  .shift-section{margin-bottom:2rem}
+  .shift-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;padding:.75rem 1rem;border-radius:14px;border:2px solid}
+  .shift-am .shift-header{background:#FFF3E0;border-color:#FFB347;color:#8B4513}
+  .shift-pm .shift-header{background:#E8F4FD;border-color:#5BA4D4;color:#1A4A6E}
+  .shift-icon{font-size:1.4rem}
+  .shift-label{font-family:'Fraunces',serif;font-size:1.2rem;font-weight:700}
+  .shift-time{font-size:.82rem;font-weight:700;opacity:.75;margin-left:auto;background:white;padding:.25rem .6rem;border-radius:8px}
+  .shift-count{font-size:.78rem;font-weight:700;background:white;padding:.25rem .6rem;border-radius:8px;opacity:.8}
+  .slot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:.6rem}
+  .slot{background:white;border:1.5px solid #E8E5DE;border-radius:12px;padding:.8rem;cursor:pointer;transition:all .2s ease}
+  .slot:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.1)}
+  .slot.open{border-color:#5CB85C}
+  .slot.taken{background:#F9F9F9;cursor:default;border-color:#DDD}
+  .slot.mine{border-color:#FF6B35;border-width:2px;background:#FFF8F4}
+  .slot-num{font-size:.65rem;font-weight:800;color:#AAA;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.3rem}
+  .slot-name{font-size:.88rem;font-weight:700;color:#2C2C2A;min-height:1.3em}
+  .slot-name.empty{color:#AAA;font-style:italic;font-weight:400}
+  .slot-badge{display:inline-block;font-size:.63rem;font-weight:800;padding:.15rem .4rem;border-radius:6px;margin-top:.3rem;letter-spacing:.04em}
+  .badge-open{background:#E8F9EC;color:#27763B}
+  .badge-taken{background:#F2F2F2;color:#888}
+  .badge-mine{background:#FFEDE5;color:#CC4A1A}
+  .slot-cancel{font-size:.65rem;color:#CC4A1A;cursor:pointer;text-decoration:underline;margin-top:.2rem;display:block}
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:center;justify-content:center;padding:1rem}
+  .modal-overlay.active{display:flex}
+  .modal{background:white;border-radius:20px;padding:2rem;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+  .modal h3{font-family:'Fraunces',serif;font-size:1.4rem;margin-bottom:.5rem;color:#2C2C2A}
+  .modal p{font-size:.875rem;color:#666;margin-bottom:1.25rem;line-height:1.5}
+  .modal input{width:100%;padding:.75rem 1rem;border:1.5px solid #DDD;border-radius:10px;font-family:'Nunito',sans-serif;font-size:1rem;margin-bottom:1rem;outline:none;transition:border-color .2s}
+  .modal input:focus{border-color:#FF6B35}
+  .btn-row{display:flex;gap:.75rem}
+  .btn{flex:1;padding:.75rem;border-radius:10px;border:none;font-family:'Nunito',sans-serif;font-weight:800;font-size:.95rem;cursor:pointer;transition:all .2s}
+  .btn-confirm{background:linear-gradient(135deg,#FF6B35,#FF9A4D);color:white}
+  .btn-confirm:hover{opacity:.9;transform:scale(1.02)}
+  .btn-cancel-modal{background:#F2F2F2;color:#666}
+  .btn-cancel-modal:hover{background:#E8E5DE}
+  .status-bar{text-align:center;font-size:.82rem;color:#AAA;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
+  .status-dot{width:8px;height:8px;border-radius:50%;background:#FFB347;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .footer{text-align:center;padding:2rem 1rem;font-size:.82rem;color:#AAA}
+  .confetti{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:200}
+  @media(max-width:480px){.slot-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="hero">
+  <img class="logo" src="https://cdn.jwevent.org/assets/2026-co-us-620d/pictures/b28f3d6a-ea21-4ca2-92e1-5e9da85f1163.svg" alt="Event logo" onerror="this.style.display='none'">
+  <div class="emoji-row">🙌 🪧 ✨ 🎉</div>
+  <h1 class="hero-title">Greeter Sign-Up</h1>
+  <p class="hero-sub">Friday, May 9th · Volunteer Interview Event</p>
+  <p class="hero-addr">📍 1651 Sunset Ave, Fairfield, CA 94533</p>
+</div>
+
+<div class="container">
+  <div class="status-bar">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusText">Connecting…</span>
+  </div>
+  <div class="vibe-banner">
+    <div class="vibe-icon">🪧</div>
+    <div class="vibe-text"><strong>Bring signs, bring energy!</strong> Your smile is the first thing attendees will see. Let's make everyone feel incredibly welcome from the moment they arrive.</div>
+  </div>
+  <div class="shift-section shift-am">
+    <div class="shift-header">
+      <span class="shift-icon">☀️</span>
+      <span class="shift-label">Morning Shift</span>
+      <span class="shift-count" id="count-am">— spots left</span>
+      <span class="shift-time">10:00 AM – 1:30 PM</span>
+    </div>
+    <div class="slot-grid" id="grid-am"></div>
+  </div>
+  <div class="shift-section shift-pm">
+    <div class="shift-header">
+      <span class="shift-icon">🌤️</span>
+      <span class="shift-label">Afternoon Shift</span>
+      <span class="shift-count" id="count-pm">— spots left</span>
+      <span class="shift-time">1:30 PM – 5:00 PM</span>
+    </div>
+    <div class="slot-grid" id="grid-pm"></div>
+  </div>
+  <div class="footer">Updates are live for everyone · Last synced: <span id="lastSync">—</span></div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3 id="modalTitle">Sign up as greeter</h3>
+    <p id="modalDesc">Enter your name to claim this spot!</p>
+    <input type="text" id="nameInput" placeholder="Your name" maxlength="40" autocomplete="off">
+    <div class="btn-row">
+      <button class="btn btn-cancel-modal" id="btnModalCancel">Cancel</button>
+      <button class="btn btn-confirm" id="btnModalConfirm">🙌 Sign Me Up!</button>
+    </div>
+  </div>
+</div>
+
+<canvas class="confetti" id="confettiCanvas"></canvas>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script>
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAuABADCp4w-QxsZbr-SUizRQTez8IpxGU",
+  authDomain: "greeter-signup-may9.firebaseapp.com",
+  databaseURL: "https://greeter-signup-may9-default-rtdb.firebaseio.com",
+  projectId: "greeter-signup-may9",
+  storageBucket: "greeter-signup-may9.firebasestorage.app",
+  messagingSenderId: "656628995860",
+  appId: "1:656628995860:web:d2d7c1354ad8ff945b9401"
+};
+
+const AM_SLOTS = 15;
+const PM_SLOTS = 15;
+
+let pendingSlot = null;
+let mySlots = JSON.parse(localStorage.getItem('myGreeterSlots_may9') || '[]');
+let db = null;
+let slots = {};
+
+function initFirebase() {
+  try {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.database();
+    db.ref('greeter_slots_may9').on('value', snap => {
+      slots = snap.val() || {};
+      renderAll();
+      document.getElementById('statusDot').style.background = '#5CB85C';
+      document.getElementById('statusText').textContent = 'Live — updates in real time';
+      document.getElementById('lastSync').textContent = new Date().toLocaleTimeString();
+    }, () => fallbackMode());
+  } catch(e) { fallbackMode(); }
+}
+
+function fallbackMode() {
+  document.getElementById('statusDot').style.background = '#FFB347';
+  document.getElementById('statusText').textContent = 'Demo mode (Firebase not configured)';
+  renderAll();
+}
+
+function renderAll() {
+  renderGrid('am', AM_SLOTS);
+  renderGrid('pm', PM_SLOTS);
+}
+
+function renderGrid(shift, count) {
+  const grid = document.getElementById('grid-' + shift);
+  grid.innerHTML = '';
+  let open = 0;
+  for(let i = 1; i <= count; i++) {
+    const key = shift + '_' + i;
+    const slotData = slots[key] || null;
+    const isMine = mySlots.includes(key);
+    if(!slotData) open++;
+    const el = document.createElement('div');
+    el.className = 'slot ' + (slotData ? (isMine ? 'mine' : 'taken') : 'open');
+    if(!slotData) {
+      el.innerHTML = `<div class="slot-num">Spot ${i}</div><div class="slot-name empty">Available!</div><div><span class="slot-badge badge-open">✓ Open</span></div>`;
+      el.addEventListener('click', () => openModal(shift, i, key));
+    } else {
+      el.innerHTML = `<div class="slot-num">Spot ${i}</div><div class="slot-name">${escHtml(slotData.name)}</div><div><span class="slot-badge ${isMine?'badge-mine':'badge-taken'}">${isMine?'You 🎉':'Signed up'}</span></div>${isMine?`<span class="slot-cancel" data-key="${key}">Remove my name</span>`:''}`;
+      if(isMine) el.querySelector('.slot-cancel').addEventListener('click', e => { e.stopPropagation(); cancelSlot(key); });
+    }
+    grid.appendChild(el);
+  }
+  document.getElementById('count-' + shift).textContent = open + ' spot' + (open !== 1 ? 's' : '') + ' left';
+}
+
+function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function openModal(shift, num, key) {
+  pendingSlot = { shift, num, key };
+  const shiftLabel = shift === 'am' ? '10:00 AM – 1:30 PM' : '1:30 PM – 5:00 PM';
+  document.getElementById('modalTitle').textContent = `Sign up for Spot ${num}`;
+  document.getElementById('modalDesc').textContent = `${shift === 'am' ? '☀️ Morning' : '🌤️ Afternoon'} Shift · ${shiftLabel}`;
+  document.getElementById('nameInput').value = '';
+  document.getElementById('modalOverlay').classList.add('active');
+  setTimeout(() => document.getElementById('nameInput').focus(), 100);
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+  pendingSlot = null;
+}
+
+function confirmSignup() {
+  const name = document.getElementById('nameInput').value.trim();
+  if(!name) { document.getElementById('nameInput').focus(); return; }
+  const { key } = pendingSlot;
+  const data = { name, ts: Date.now() };
+  closeModal();
+  if(db) {
+    db.ref('greeter_slots_may9/' + key).transaction(current => {
+      if(current) return;
+      return data;
+    }, (err, committed) => {
+      if(committed) { mySlots.push(key); localStorage.setItem('myGreeterSlots_may9', JSON.stringify(mySlots)); celebrate(); }
+      else alert('Oops, someone just grabbed that spot! Pick another one.');
+    });
+  } else {
+    slots[key] = data;
+    mySlots.push(key);
+    localStorage.setItem('myGreeterSlots_may9', JSON.stringify(mySlots));
+    renderAll();
+    celebrate();
+  }
+}
+
+function cancelSlot(key) {
+  if(!confirm('Remove your name from this slot?')) return;
+  mySlots = mySlots.filter(k => k !== key);
+  localStorage.setItem('myGreeterSlots_may9', JSON.stringify(mySlots));
+  if(db) db.ref('greeter_slots_may9/' + key).remove();
+  else { delete slots[key]; renderAll(); }
+}
+
+document.getElementById('btnModalConfirm').addEventListener('click', confirmSignup);
+document.getElementById('btnModalCancel').addEventListener('click', closeModal);
+document.getElementById('nameInput').addEventListener('keydown', e => { if(e.key==='Enter') confirmSignup(); });
+document.getElementById('modalOverlay').addEventListener('click', e => { if(e.target===document.getElementById('modalOverlay')) closeModal(); });
+
+function celebrate() {
+  const canvas = document.getElementById('confettiCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const pieces = Array.from({length:90}, () => ({
+    x: Math.random()*canvas.width, y: -10,
+    vx: (Math.random()-0.5)*4, vy: 2+Math.random()*4,
+    color: ['#FF6B35','#FFD166','#5CB85C','#5BA4D4','#FF9A4D','#E055A3'][Math.floor(Math.random()*6)],
+    size: 6+Math.random()*8, rot: Math.random()*360, vr: (Math.random()-0.5)*6
+  }));
+  let frame;
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p => {
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.color; ctx.fillRect(-p.size/2,-p.size/4,p.size,p.size/2);
+      ctx.restore();
+      p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr; p.vy+=0.05;
+    });
+    if(pieces.some(p=>p.y<canvas.height)) frame=requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  draw();
+  setTimeout(()=>{ cancelAnimationFrame(frame); ctx.clearRect(0,0,canvas.width,canvas.height); },3500);
+}
+
+initFirebase();
+</script>
+</body>
+</html>
